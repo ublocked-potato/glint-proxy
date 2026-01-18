@@ -1,86 +1,263 @@
-<!DOCTYPE html> 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Glint Browser</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/reviews.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="OmniSearch - Universal search powered by DuckDuckGo">
+    <meta name="keywords" content="omnisearch, search, duckduckgo, privacy">
+    <link rel="canonical" href="https://ublocked-potato.github.io/glint-proxy/">
+    
+    <title>OmniSearch</title>
+    
+    <!-- Your existing CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .logo-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            margin-right: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 8px 32px rgba(255,107,107,0.4);
+        }
+        
+        .dark-toggle {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        
+        .dark-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 40px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .search-input {
+            width: 100%;
+            height: 70px;
+            padding: 0 70px 0 30px;
+            font-size: 18px;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 40px;
+            color: white;
+            backdrop-filter: blur(20px);
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .search-input:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 30px rgba(78,205,196,0.4);
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-icon:hover {
+            color: #4ecdc4;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .features {
+            margin-top: 40px;
+            text-align: center;
+            opacity: 0.9;
+        }
+        
+        .powered-by {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            opacity: 0.7;
+            text-align: center;
+        }
+        
+        .dark-mode {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b69 100%);
+        }
+        
+        .dark-mode .search-input {
+            background: rgba(0,0,0,0.4);
+            border-color: rgba(78,205,196,0.5);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .logo-circle { animation: float 3s ease-in-out infinite; }
+    </style>
 </head>
 <body>
-  <div class="browser">
-    <div class="browser-header">
-      <div class="tabs">
-        <div class="tab active" data-tab-id="newtab">
-          <div class="tab-favicon-placeholder">
-            <img src="images/logo.png" alt="Glint Logo" class="tab-logo">
-          </div>
-          <span class="tab-title">New Tab</span>
-          <span class="tab-close"><i class="fas fa-times"></i></span>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-circle">🔍</div>
+            OmniSearch
         </div>
-        <div class="new-tab-btn"><i class="fas fa-plus"></i></div>
-      </div>
-    </div>
+        <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+    </header>
 
-    <div class="toolbar">
-      <div class="navigation-controls">
-        <button class="nav-btn back-btn" aria-label="Go back"><i class="fas fa-arrow-left"></i></button>
-        <button class="nav-btn forward-btn" aria-label="Go forward"><i class="fas fa-arrow-right"></i></button>
-        <button class="nav-btn reload-btn" aria-label="Reload page"><i class="fas fa-redo"></i></button>
-      </div>
-      <div class="address-bar-container">
-        <span class="address-bar-lock"><i class="fas fa-lock"></i></span>
-        <input type="text" class="address-bar-input" placeholder="Search or enter a URL">
-      </div>
-      <div class="toolbar-actions">
-        <button class="action-btn menu-btn" aria-label="More options"><i class="fas fa-ellipsis-v"></i></button>
-      </div>
-    </div>
-
-    <div class="browser-content">
-      <div class="new-tab-page">
-        <div class="new-tab-container">
-          <div class="hero-section">
-            <div class="logo-container">
-              <img src="images/logo.png" alt="Glint Logo" class="main-logo">
-            </div>
-            <div class="search-container">
-              <div class="search-bar">
-                <div class="search-icon"><i class="fas fa-search"></i></div>
-                <input type="text" class="main-search-input" placeholder="Search or enter a site URL">
-              </div>
-            </div>
-          </div>
-
-          <div class="footer">
-            <p>Developed by Hydra Network</p>
-          </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="search-container">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="searchInput"
+                placeholder="Search the web with OmniSearch..."
+                onkeypress="handleSearch(event)"
+            >
+            <div class="search-icon" onclick="performSearch()">🔍</div>
         </div>
-      </div>
-      <div id="proxy-frames-container"></div>
+        
+        <div class="features">
+            <p>Fast • Private • Powered by DuckDuckGo</p>
+        </div>
     </div>
-  </div>
 
-  <!-- All your JS files in correct order -->
-  <script src="js/utils/url-utils.js"></script>
-  <script src="js/utils/favicon.js"></script>
-  <script src="js/utils/proxy-frames.js"></script>
-  <script src="js/tabs/tab-history.js"></script>
-  <script src="js/tabs/tab-storage.js"></script>
-  <script src="js/tabs/tab-dragging.js"></script>
-  <script src="js/tabs/tab-management.js"></script>
-  <script src="js/navigation/navigation.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/search.js"></script>
-  <script src="js/proxy-config.js"></script>
-  <script src="js/options.js"></script>
-  <script src="js/register-sw.js"></script>
-  <script src="js/reviews-carousel.js"></script>
+    <!-- Footer -->
+    <div class="powered-by">
+        Powered by DuckDuckGo
+    </div>
 
-  <!-- Proxy engines -->
-  <script src="baremux/index.js"></script>
-  <script src="epoxy/index.js"></script>
+    <!-- COMPLETE INTERACTIVE SCRIPT - DUCKDUCKGO ONLY -->
+    <script>
+        // DuckDuckGo only
+        const searchUrl = 'https://duckduckgo.com/?q=';
+        
+        // 1. HANDLE ENTER KEY + CLICK SEARCH
+        function handleSearch(event) {
+            if (event.key === 'Enter') performSearch();
+        }
+        
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+            
+            const url = searchUrl + encodeURIComponent(query);
+            window.open(url, '_blank');
+            
+            // Visual feedback
+            const input = document.getElementById('searchInput');
+            input.style.transform = 'scale(0.95)';
+            setTimeout(() => input.style.transform = '', 150);
+        }
+        
+        // 2. DARK MODE
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            document.querySelector('.dark-toggle').textContent = isDark ? '☀️' : '🌙';
+        }
+        
+        // Load theme
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.dark-toggle').textContent = '☀️';
+        }
+        
+        // 3. COPY URL BUTTON (click logo)
+        document.querySelector('.logo').addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                const logo = document.querySelector('.logo');
+                const original = logo.innerHTML;
+                logo.innerHTML = '✅ Copied!';
+                setTimeout(() => logo.innerHTML = original, 2000);
+            });
+        });
+        
+        console.log('✅ OmniSearch loaded! DuckDuckGo only.');
+        console.log('🌐 Ready: https://ublocked-potato.github.io/glint-proxy/');
+    </script>
 </body>
 </html>
-
